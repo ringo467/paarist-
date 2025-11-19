@@ -59,8 +59,34 @@ function appendLog(message) {
 function renderHeroes(list) {
   heroListEl.innerHTML = "";
   list.forEach(hero => {
+    const card = document.createEelement("div");
+    card.className = "hero-card";
 
-  })
+    const nameEl = document.createElement("div");
+    nameEl.className ="hero-name";
+    nameEl.textContent = hero.name;
+
+    const roleEl = document.createElement("div");
+    roleEl.className = "hero-role";
+    roleEl.textContent = "Roll: " + hero.role;
+
+    const statsEl = document.createElement("div");
+    statsEl.className = "hero-stats";
+
+    const hpSpan = document.createElement("span");
+    hpSpan.textContent = "HP" + hero.hp;
+
+    const powerSpan = document.createElement("span");
+    powerSpan.textContent = "Power" + hero.power;
+
+    statsEl.appendChild(hpSpan);
+    statsEl.appendChild(powerSpan);
+    card.appendChild(nameEl);
+    card.appendChild(roleEl);
+    card.appendChild(statsEl);
+    
+  });
+  heroCountEl.textContent = list.length;
 }
 
 // renderBoss()
