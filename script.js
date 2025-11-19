@@ -28,4 +28,4 @@ function appendLog(message) {
     TODO
 }
 
-renderHeroes(list)š
+renderHeroes(list)
