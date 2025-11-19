@@ -49,17 +49,11 @@ function appendLog(message) {
 //  - kasuta list.forEach(hero => { ... });
 //    - loo iga kangelase jaoks div.hero-card nt  const card = document.createElement("div");
 //    - lisa sinna nimi, roll, hp ja power nt  card.className = "hero-card";
-// - kui kõik osad on loodud tuleb need lisada üksteise sisse
-// nt        statsEl.appendChild(hpSpan);
-//   statsEl.appendChild(powerSpan);
-//   card.appendChild(nameEl);
-//   card.appendChild(roleEl);
-//   card.appendChild(statsEl);
-//  - heroCountEl.textContent = list.length;
+
 function renderHeroes(list) {
   heroListEl.innerHTML = "";
   list.forEach(hero => {
-    const card = document.createEelement("div");
+    const card = document.createElement("div");
     card.className = "hero-card";
 
     const nameEl = document.createElement("div");
@@ -76,6 +70,12 @@ function renderHeroes(list) {
     const hpSpan = document.createElement("span");
     hpSpan.textContent = "HP" + hero.hp;
 
+// - kui kõik osad on loodud tuleb need lisada üksteise sisse
+// nt        statsEl.appendChild(hpSpan);
+//   statsEl.appendChild(powerSpan);
+//   card.appendChild(nameEl);
+//   card.appendChild(roleEl);
+//   card.appendChild(statsEl);
     const powerSpan = document.createElement("span");
     powerSpan.textContent = "Power" + hero.power;
 
@@ -84,10 +84,13 @@ function renderHeroes(list) {
     card.appendChild(nameEl);
     card.appendChild(roleEl);
     card.appendChild(statsEl);
+    heroListEl.appendChild(card);
     
   });
+  //  - heroCountEl.textContent = list.length;
   heroCountEl.textContent = list.length;
 }
+
 
 // renderBoss()
 //  - uuenda bossNameEl.textContent = boss.name;
@@ -96,7 +99,13 @@ function renderHeroes(list) {
 //  - sea  bossBarInner.style.width = Math.max(0, Math.min(100, percent)) + "%";
 //  - kui boss.hp <= 0 → võid lisada logisse „Boss on alistatud!”
 function renderBoss() {
-  // TODO
+  bossNameEl.textContent = boss.name;
+  bossHpEl.textContent = "HP: " + boss.hp;
+  percent = (boss.hp / boss.maxHp) * 100
+  bossBarInner.style.width = Math.max(0, Math.min(100, percent)) + "%";
+if (boss.hp <= 0) {
+    appendLog("Victory Royale!")
+}
 }
 
 // showAllHeroes()
@@ -105,7 +114,11 @@ function renderBoss() {
 //  - renderBoss()
 //  - appendLog("Kuvame kõik kangelased")
 function showAllHeroes() {
-  // TODO
+   heroes = originalHeroes.map((hero) => ({...hero}))
+   renderHeroes(heroes)
+   renderBoss()
+    appendLog("Kuvame kõik kangelased")
+
 }
 
 // filterByRole()
@@ -116,7 +129,18 @@ function showAllHeroes() {
 //      renderHeroes(filtered);
 //      appendLog("Filtreerime rolli järgi: " + value);
 function filterByRole() {
-  // TODO
+  const value = roleSelect.value;
+  if (value === "all") {
+    showAllHeroes();
+    appendLog("Sorteerimine tühistatud - näitame kõiki rolle");
+    return;
+  }
+
+const filtered = heroes.filter((hero) => hero.role === value);
+renderHeroes(filtered);
+appendLog(
+    "Sordi rolli järgi: " + value + " (kokku" +filtered.length + ")"
+)
 }
 
 // boostTeam()
@@ -124,14 +148,20 @@ function filterByRole() {
 //  - seejärel renderHeroes(heroes)
 //  - appendLog("Lisatud +10 HP kõigile kangelastele");
 function boostTeam() {
-  // TODO
+  heroes.forEach((hero) => {
+    hero.hp += 10;
+  })
+  renderHeroes(heroes);
+  appendLog("Kõik saavad 10 HP");
+
 }
 
 // calcTeamPower(list)
 //  - kasuta reduce, et liita kokku list[] power väärtused
 //  - kui list on tühi, tagasta 0
 function calcTeamPower(list) {
-  // TODO
+  if (!list.length) return 0;
+  return list.reduce((sum,hero) => sum + hero.power, 0);
 }
 
 // showTeamPower()
@@ -139,7 +169,9 @@ function calcTeamPower(list) {
 //  - kuva teamPowerEl elemendis
 //  - appendLog("Meeskonna kogujõud: " + power);
 function showTeamPower() {
-  // TODO
+  const power = calcTeamPower(heroes);
+  teamPowerEl.textContent = power;
+  appendLog("Meeskonna power" + power);
 }
 
 // resetTeam()
@@ -151,7 +183,13 @@ function showTeamPower() {
 //  - renderBoss();
 //  - appendLog("Taastasime algse meeskonna ja bossi");
 function resetTeam() {
-  // TODO
+  heroes = originalHeroes.map((heroes) => ({...heroes}));
+  boss = {...originalBoss};
+  teamPowerEl.textContent = "0";
+  logEl.textContent = "";
+  renderHeroes(heroes);
+  renderBoss();
+  appendLog("Boss on tagasi (meeskond ka)");
 }
 
 // attackBoss()
@@ -161,7 +199,20 @@ function resetTeam() {
 //  - kutsu renderBoss()
 //  - appendLog("Ründajad tegid bossile " + dmg + " kahju");
 function attackBoss() {
-  // TODO
+  const attackers = heroes.filter(hero => hero.role === "Ründaja");
+  const dmg = calcTeamPower(attackers);
+  if (dmg === 0) {
+    appendLog("Ründaja ei ründa");
+    return;
+  }
+  boss.hp -= dmg;
+  if (boss.hp < 0) boss.hp = 0;
+  renderBoss();
+  appendLog("Ründajad virutasid" + dmg + "dämmi");
+  if (boss.hp <= 0) {
+    appendLog("Boss sai molli");
+   } 
+  console.log(boss.hp)
 }
 
 // healTanks()
