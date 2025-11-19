@@ -199,7 +199,7 @@ function resetTeam() {
 //  - kutsu renderBoss()
 //  - appendLog("Ründajad tegid bossile " + dmg + " kahju");
 function attackBoss() {
-  const attackers = heroes.filter(hero => hero.role === "Ründaja");
+  const attackers = heroes.filter(hero => hero.role === "ründaja");
   const dmg = calcTeamPower(attackers);
   if (dmg === 0) {
     appendLog("Ründaja ei ründa");
@@ -221,7 +221,17 @@ function attackBoss() {
 //  - renderHeroes(heroes);
 //  - appendLog("Raviarstid ravisid tanke (+15 HP)");
 function healTanks() {
-  // TODO
+  let healed = 0;
+  heroes.forEach((hero) => {
+    if (hero.role === "tank") {
+        hero.hp += 15;
+        healed++;
+    }
+  });
+  renderHeroes(heroes);
+  appendLog (
+    "Ravitsejad ravisid tanke" + healed + ""
+  );
 }
 
 // -------------------------------------------------------------
@@ -230,4 +240,4 @@ function healTanks() {
 // Õpetaja võib jätta lahti, et õpilane kutsub ise resetTeam(),
 // või kohe mängu alguses aktiveerida:
 //
-// resetTeam();
+resetTeam();
