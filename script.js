@@ -40,7 +40,8 @@ const bossBarInner = document.getElementById("bossBarInner");
 //  - lisa logEl lõppu uus rida (message + "\n")
 //  - võid pärast lisamist kerida logi alla: logEl.scrollTop = logEl.scrollHeight;
 function appendLog(message) {
-  // TODO
+  logEl.textContent += message + "\n";
+  logEl.scrollTop = logEl.scrollHeight;
 }
 
 // renderHeroes(list)
@@ -56,7 +57,10 @@ function appendLog(message) {
 //   card.appendChild(statsEl);
 //  - heroCountEl.textContent = list.length;
 function renderHeroes(list) {
-  // TODO
+  heroListEl.innerHTML = "";
+  list.forEach(hero => {
+
+  })
 }
 
 // renderBoss()
